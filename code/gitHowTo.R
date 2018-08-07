@@ -1,6 +1,12 @@
-git config --global user.name "kgladhill"
-git config --global user.email "kristie.w.gladhill@odot.state.or.us"
-git config --global color.ui "auto"
+######### ######### ######### ######### ######### 
+### the following three lines are to be typed in terminal window
+#  Tools -> Shell
+# git config --global user.name "kgladhill"
+# git config --global user.email "kristie.w.gladhill@odot.state.or.us"
+# git config --global color.ui "auto"
+
+# click in Git window, upper right corner
+# click which files you want "staged"
 
 #initiate       # only need to create a repository once (ever)
 #add

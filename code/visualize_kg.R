@@ -74,8 +74,10 @@ bar + coord_polar()
 source("code/load_data.R")
 
 # simple plot, brname different colors
-ggplot(data = bikecounts) + 
-  geom_point(mapping = aes(x = date, y = total,color = brname))
+p <- ggplot(data = bikecounts) + 
+  geom_point(mapping = aes(x = date, y = total,color = brname)) 
+p + labs(color="Bridge")
+p + labs(title = "Daily Total Bike Counts")
 
 # bar chart, avg bikes per day by dat of wekk vs. brname
 bikecounts$dow <- wday(as.Date(bikecounts$date), label = TRUE)
@@ -83,8 +85,9 @@ bikeCNTdow <- bikecounts %>%
   group_by(dow,brname) %>%
   summarise(avgBikesPerDay=mean(total))
 # bar chart by dow, bridge
-ggplot(bikeCNTdow) + 
-  geom_bar(mapping = aes(x = brname, y = avgBikesPerDay, fill = dow), stat = "identity", position = "dodge")
+p <- ggplot(bikeCNTdow) + 
+  geom_bar(mapping = aes(x = brname, y = avgBikesPerDay, fill = dow),  stat = "identity", position = "dodge") 
+p + labs(x = "Bridge")
 # box plot
 ggplot(data = bikeCNTdow) +
   geom_boxplot(aes(x = dow, y =avgBikesPerDay))
@@ -163,7 +166,8 @@ ggplot(data = bikeCntWeather) +
 # total riders vs. PRCP, separate graph for each bridge, bridges different color
 ggplot(data = bikeCntWeather) + 
   geom_point(mapping = aes(x = PRCP, y = total,color = brname)) + 
-  facet_wrap(~ brname, nrow = 1)
+  facet_wrap(~ brname, nrow = 1) +
+  labs(x = "Precipitation") + labs(color = "Bridge")
 
 # total riders vs. SNOW, bridges different color
 ggplot(data = bikeCntWeather) + 
@@ -187,7 +191,8 @@ ggplot(data = bikeCntWeather) +
 # total riders vs. TMAX, separate graph for each bridge, bridges different color
 ggplot(data = bikeCntWeather) + 
   geom_point(mapping = aes(x = TMIN, y = total,color = brname)) + 
-  facet_wrap(~ brname, nrow = 1)
+  facet_wrap(~ brname, nrow = 1) +
+  labs(x = "Minimum Temperature") + labs(color = "Bridge")
 
 # from instructor
 # ggplot3 now allows 2nd y axis()

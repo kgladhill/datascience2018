@@ -75,6 +75,9 @@ bikeCntTbl11
 # Wed
 bikeCntTbl12 <- bikecounts_dow %>% spread(key = "brname", value = "dowAvg")
 bikeCntTbl12
+
+bikeCntTbl2 <- bikecounts %>% spread(key = "brname", value = "total")
+bikeCntTbl2
 #
 ######### ######### ######### ######### #########
 # convert back to wide format

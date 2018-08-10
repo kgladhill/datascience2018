@@ -1,0 +1,59 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+
+```{r setup, include=FALSE, echo=FALSE}
+# set knit directory one above docs to get to project root
+knitr::opts_knit$set(root.dir="../") 
+```
+
+```{r setup2, include=FALSE}
+library(flexdashboard)
+source("code/load_data.R")
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r plotXY}
+library(ggplot2)
+p <- ggplot(data = bikecounts) + 
+  geom_point(mapping = aes(x = date, y = total,color = brname)) 
+p + labs(color="Bridge") + labs(title = "Daily Total Bike Counts")
+
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B - Average Bike Counts by Day of Week
+
+```{r barDOW}
+bikecounts$dow <- wday(as.Date(bikecounts$date), label = TRUE)
+bikeCNTdow <- bikecounts %>%
+  group_by(dow,brname) %>%
+  summarise(avgBikesPerDay=mean(total))
+# bar chart by dow, bridge
+p <- ggplot(bikeCNTdow) + 
+  geom_bar(mapping = aes(x = brname, y = avgBikesPerDay, fill = dow),  stat = "identity", position = "dodge") 
+p + labs(x = "Bridge")
+```
+
+### Chart C -  Average Daily Bike Counts vs. Precipitation
+
+```{r plotPRCP}
+ggplot(data = bikeCntWeather) + 
+  geom_point(mapping = aes(x = PRCP, y = total,color = brname)) + 
+  facet_wrap(~ brname, nrow = 1) +
+  labs(x = "Precipitation (inches)") + labs(color = "Bridge")
+
+```

@@ -1,0 +1,98 @@
+---
+title: "Class Project Report"
+author: "K. Gladhill"
+date: "August 10, 2018"
+output: html_document
+---
+
+```{r setup}
+# set knit directory one above docs to get to project root
+knitr::opts_knit$set(root.dir="../") 
+```
+
+
+# Daily Bike Count data on Three Portland Bridges
+## Hawthorne, Tilikum, and Steel Bridges
+
+
+```{r getData, echo=FALSE, include=FALSE}
+source("code/load_data.R")
+head(bikeCntWeather)
+```
+  
+```{r loadData}
+library(readxl)
+library(lubridate)
+library(tidyverse)
+
+input_file <- "data/Hawthorne Tilikum Steel daily bike counts 073118.xlsx"
+bridge_name <- "Hawthorne"
+
+# define a funtion that load bike counts data
+load_data <- function(input_file, bridge_name) {
+  bikecounts <- read_excel(input_file,
+                           sheet = bridge_name,
+                           skip = 1)
+  bikecounts$brname <- bridge_name
+  bikecounts
+}
+
+Tilikum <- load_data(input_file, "Tilikum")
+Hawthorne <- load_data(input_file, "Hawthorne")
+names(Hawthorne) <- names(Tilikum)  # use the column names of Tilikum for Hawthorne
+Steel <- load_data(input_file, "Steel")
+names(Steel) <- c("date", "lower", "westbound", "eastbound", "total", "brname")
+# combine all three data frames for all three bridges
+bikecounts <- bind_rows(Hawthorne, 
+                        Tilikum, 
+                        Steel %>% select(-lower)) # exclude the `lower` col in Steel data frame
+# weather data
+weatherData <- read_csv("data/NCDC-CDO-USC00356750.csv")
+weatherData
+# join bikeconts and weatherData
+bikeCntWeather <- bikecounts %>%
+  mutate(DATE=as_date(date)) %>%
+  left_join(weatherData)
+
+```
+
+```{r plotXY}
+library(ggplot2)
+p <- ggplot(data = bikecounts) + 
+  geom_point(mapping = aes(x = date, y = total,color = brname)) 
+p + labs(color="Bridge") + labs(title = "Daily Total Bike Counts")
+
+
+```
+  
+###Bar chart - Average Bike Counts per day for each Bridge
+####by day of week
+```{r barDOW}
+bikecounts$dow <- wday(as.Date(bikecounts$date), label = TRUE)
+bikeCNTdow <- bikecounts %>%
+  group_by(dow,brname) %>%
+  summarise(avgBikesPerDay=mean(total))
+# bar chart by dow, bridge
+p <- ggplot(bikeCNTdow) + 
+  geom_bar(mapping = aes(x = brname, y = avgBikesPerDay, fill = dow),  stat = "identity", position = "dodge") 
+p + labs(x = "Bridge")
+```
+
+### Bike Counts vs. Precipitaion (inches)
+```{r plotPRCP}
+ggplot(data = bikeCntWeather) + 
+  geom_point(mapping = aes(x = PRCP, y = total,color = brname)) + 
+  facet_wrap(~ brname, nrow = 1) +
+  labs(x = "Precipitation") + labs(color = "Bridge")
+
+```
+
+### Bike Counts vs. Minimum Temperature
+
+```{r plotTMIN}
+ggplot(data = bikeCntWeather) + 
+  geom_point(mapping = aes(x = TMIN, y = total,color = brname)) + 
+  facet_wrap(~ brname, nrow = 1) +
+  labs(x = "Minimum Temperature") + labs(color = "Bridge")
+
+```

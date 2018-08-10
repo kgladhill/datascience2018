@@ -1,29 +1,30 @@
 # code from Liming Wang, instructor, for Day 1 project task
 library(readxl)
 library(lubridate)
+library(tidyverse)
 
 input_file <- "data/Hawthorne Tilikum Steel daily bike counts 073118.xlsx"
-##bridge_name <- "Hawthorne"
+bridge_name <- "Hawthorne"
 
-# define a funtion that loads bike counts data
+# define a funtion that load bike counts data
 load_data <- function(input_file, bridge_name) {
   bikecounts <- read_excel(input_file,
                            sheet = bridge_name,
                            skip = 1)
-  bikecounts$name <- bridge_name
+  bikecounts$brname <- bridge_name
   bikecounts
 }
 
-Hawthorne <- load_data(input_file, "Hawthorne")
 Tilikum <- load_data(input_file, "Tilikum")
+Hawthorne <- load_data(input_file, "Hawthorne")
 
 # use the column names of Tilikum for Hawthorne
 names(Hawthorne) <- names(Tilikum)
 
 Steel <- load_data(input_file, "Steel")
-names(Steel) <- c("date", "lower", "westbound", "eastbound", "total", "name")
+names(Steel) <- c("date", "lower", "westbound", "eastbound", "total", "brname")
 
-# combine all three data frames for all three bridges
+# combine all three data frame for all three bridges
 bikecounts <- bind_rows(Hawthorne, 
                         Tilikum, 
                         Steel %>% select(-lower)) # exclude the `lower` col in Steel data frame
@@ -41,3 +42,4 @@ bikecounts %>%
   # then average by month over years for each bridge
   group_by(name, month(ym)) %>% 
   summarize(avg_monthly_counts=mean(total_monthly_counts))
+# © 2018 GitHub, Inc.

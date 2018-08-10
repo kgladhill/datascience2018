@@ -23,3 +23,17 @@ mutate(flights_sml,
        gain = dep_delay - arr_delay,
        speed = distance / air_time * 60
 )
+
+# 8/9/2018 example left join
+flights %>%
+  left_join(airlines) # defaults to use all common columns, same name
+flights %>%
+  left_join(planes, by = "tailnum") 
+# if column names not the same, can either rename before jion or specify in join
+
+flights %>%
+  left_join(flights, airlines, by = "carrier")
+
+
+left_join(flights, airlines, by = c("carrier" = "faa", "carrier" = "faa")) 
+left_join(test_data, nameList , by = c("first_name" = "name"))

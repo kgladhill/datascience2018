@@ -62,15 +62,15 @@ getwd()                    #locate your working directory
 library(lattice)
 library(RODBC)
 ##notes from Monsere
-#First set the option CRAN to your nearest CRAN mirror using
-chooseCRANmirror()
-installed.packages(lib.loc = NULL, priority = NULL, noCache = FALSE, fields = NULL)
-
-#install package and any packages it's dependent on
-install.packages("rgl", dependencies = TRUE)
-install.packages("rgl", lib = file.path("c:/Program Files (x86)/R/R-2.10.1/library"), dependencies = TRUE)
-install.packages("rgl",  "C:/PROGRA~2/R/R-210~1.1/library", dependencies = TRUE)
-install.packages("rgl", lib = file.path("c:", "Program Files (x86)","R","R-2.10.1","library",fsep = "/"), dependencies = TRUE)
+# #First set the option CRAN to your nearest CRAN mirror using
+# chooseCRANmirror()
+# installed.packages(lib.loc = NULL, priority = NULL, noCache = FALSE, fields = NULL)
+# 
+# #install package and any packages it's dependent on
+# install.packages("rgl", dependencies = TRUE)
+# install.packages("rgl", lib = file.path("c:/Program Files (x86)/R/R-2.10.1/library"), dependencies = TRUE)
+# install.packages("rgl",  "C:/PROGRA~2/R/R-210~1.1/library", dependencies = TRUE)
+# install.packages("rgl", lib = file.path("c:", "Program Files (x86)","R","R-2.10.1","library",fsep = "/"), dependencies = TRUE)
 ?file.path
 ?install.packages
 
@@ -111,3 +111,34 @@ paste(str1,str2,sep = "")
 }
 #call and run the function
 trialFunction("test","case")
+
+### 8/8/2018 data science course
+library(tidyverse)
+# -- Attaching packages -------------------------------- tidyverse 1.2.1 --
+#   v ggplot2 3.0.0     v purrr   0.2.5
+# v tibble  1.4.2     v dplyr   0.7.6
+# v tidyr   0.8.1     v stringr 1.3.1
+# v readr   1.1.1     v forcats 0.3.0
+# -- Conflicts ----------------------------------- tidyverse_conflicts() --
+#   x dplyr::filter() masks stats::filter
+#   x dplyr::lag()    masks stats::lag()
+tibble(
+  a = lubridate::now() + runif(1e3) * 86400,
+  b = lubridate::today() + runif(1e3) * 30,
+  c = 1:1e3,
+  d = runif(1e3),
+  e = sample(letters, 1e3, replace = TRUE)
+)
+print(mtcars, n = 10, width = Inf)
+
+df <- tibble(
+  x = runif(5),
+  y = rnorm(5)
+)
+
+# Extract by name
+df$x
+df[["x"]]
+# Extract by column position
+df[[1]]
+

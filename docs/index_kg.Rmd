@@ -1,6 +1,6 @@
 ---
 title: "index_kg.Rmd"
-author: "K. Gladhill"
+author: "K. Gladhill with edit"
 date: "August 10, 2018"
 output: html_document
 ---
